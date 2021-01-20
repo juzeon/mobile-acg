@@ -1,0 +1,7 @@
+{
+    "require": {
+        "guzzlehttp/guzzle": "6.5",
+        "paragonie/easydb": "^2.11",
+        "stechstudio/backoff": "^1.2"
+    }
+}
