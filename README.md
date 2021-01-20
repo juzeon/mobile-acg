@@ -1,9 +1,10 @@
 # mobile-acg
 
 ![](https://badgen.net/badge/PHP/%3E=7.1/blue)
+![](https://badgen.net/badge/php_extension/pdo_sqlite/blue)
 ![](https://badgen.net/badge/license/MIT/green)
 
-一个PHP API，随机获取一张或多张来自 [t.me/MikuArt](https://t.me/MikuArt) 的适合竖屏移动设备查看的二次元图片，支持直接反代。
+一个PHP开发的HTTP API，随机获取一张或多张来自 [t.me/MikuArt](https://t.me/MikuArt) 的适合竖屏移动设备查看的二次元图片，支持直接反代。
 
 ## 使用API
 
