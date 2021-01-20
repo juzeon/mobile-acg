@@ -6,6 +6,8 @@
 
 一个PHP开发的HTTP API，随机获取一张或多张来自Telegram频道 [t.me/MikuArt](https://t.me/MikuArt) 的适合竖屏移动设备查看的二次元图片，支持直接反代。
 
+网络上其实有很多类似的API，但基本都不开源，不能自行部署，服务稳定性没有保障。并且许多接口内置的图片较少，或者很久都不再更新了。所以我就自己写了一个。调用的是Telegram地址，并且可以自行部署，服务稳定性有保障。另外Telegram频道@MikuArt这个频道存在时间很长了，每天都维持着一个很高的更新频率。
+
 ## 使用API
 
 我提供的API：<https://api.skyju.cc/mobile-acg/api.php>
