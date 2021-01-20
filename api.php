@@ -38,9 +38,14 @@ switch ($method){
         echo $imgRaw;
         break;
     case 'redirect':
-        $tgId=$db->cell('select tg_id from images order by random() limit 1');
-        header('Location: '.(isSSL()?'https://':'http://').$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']
-            .'?method=get&id='.$tgId);
+        if(isset($_GET['no_proxy'])){
+            $url=$db->cell('select url from images order by random() limit 1');
+            header('Location: '.$url);
+        }else {
+            $tgId = $db->cell('select tg_id from images order by random() limit 1');
+            header('Location: ' . (isSSL() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']
+                . '?method=get&id=' . $tgId);
+        }
         break;
     default:
         exitWithApiJson('Param \'method\': json, get, redirect',false);
