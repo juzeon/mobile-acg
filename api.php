@@ -15,7 +15,7 @@ switch ($method){
         $obj=[];
         foreach ($result as $item){
             $obj[]=[
-                'id'=>$item['tg_id'],
+                'id'=>intval($item['tg_id']),
                 'raw_url'=>$item['url'],
                 'proxy_url'=>(isSSL()?'https://':'http://').$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']
                     .'?method=get&id='.$item['tg_id']
