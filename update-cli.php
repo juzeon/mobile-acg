@@ -1,4 +1,8 @@
 <?php
+if(php_sapi_name() != 'cli'){
+    echo 'This file can only be accessed via cli';
+    exit;
+}
 require_once (__DIR__.'/init.php');
 println('Getting First HTML...');
 $resp=backoff(function () use ($guzzle){
