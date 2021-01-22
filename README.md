@@ -4,9 +4,9 @@
 ![](https://badgen.net/badge/php_extension/pdo_sqlite/blue)
 ![](https://badgen.net/badge/license/MIT/green)
 
-一个PHP开发的HTTP API，随机获取一张或多张来自Telegram频道 [t.me/MikuArt](https://t.me/MikuArt) 的适合竖屏移动设备查看的二次元图片，支持直接反代。
+一个PHP开发的HTTP API，随机获取一张或多张来自Telegram频道 [t.me/MikuArt](https://t.me/MikuArt) 的适合竖屏移动设备查看的二次元图片，并上传到今日头条的图床，支持JSON获取地址或直接跳转。
 
-网络上其实有很多类似的API，但基本都不开源，不能自行部署，服务稳定性没有保障。并且许多接口内置的图片较少，或者很久都不再更新了。所以我就自己写了一个。调用的是Telegram地址，并且可以自行部署，服务稳定性有保障。另外Telegram频道@MikuArt这个频道存在时间很长了，每天都维持着一个很高的更新频率。
+网络上其实有很多类似的API，但基本都不开源，不能自行部署，服务稳定性没有保障。并且许多接口内置的图片较少，或者很久都不再更新了。所以我就自己写了一个。调用的是Telegram地址，上传到今日头条的图床，并且可以自行部署，服务稳定性有保障。另外Telegram频道@MikuArt这个频道存在时间很长了，每天都维持着一个很高的更新频率。
 
 ## 使用API
 
@@ -35,49 +35,31 @@ curl "https://api.skyju.cc/mobile-acg/api.php?method=json&count=2"
 
 ```json
 {
-    "status": true, # 若为false，则参数有误
+    "status": true,
     "data": [
         {
-            "id": 5478, # 图片对应的ID
-            "raw_url": "https://cdn4.telesco.pe/file/k5...WA.jpg", # 图片的原地址（Telegram CDN地址）
-            "proxy_url": "https://api.skyju.cc/mobile-acg/api.php?method=get&id=5478" # 反代地址
+            "id": 9824,
+            "url": "https://img11.360buyimg.com/ddimg/jfs/t1/157690/25/4215/76309/600a8e64Ec3ca56f7/f41912b4f6a6be9f.jpg"
         },
         {
-            "id": 8246,
-            "raw_url": "https://cdn1.telesco.pe/file/DXC1...3g.jpg",
-            "proxy_url": "https://api.skyju.cc/mobile-acg/api.php?method=get&id=8246"
+            "id": 9028,
+            "url": "https://img14.360buyimg.com/ddimg/jfs/t1/157866/6/4622/87677/600a8f73E3c156e23/b20bdc78aed0212d.jpg"
         }
     ]
 }
 ```
 
-### 反代获取一张随机或指定图片的数据
+### 随机或指定ID获取一张图片并跳转到地址
 
-| GET参数 | 值类型        | 是否可选 | 说明                     |
-| ------- | ------------- | -------- | ------------------------ |
-| method  | "get": String | 否       | 本接口规定的method值     |
-| id      | Int           | 是       | 图片的ID；不指定则为随机 |
-
-示例请求：
-
-```bash
-curl "https://api.skyju.cc/mobile-acg/api.php?method=get&id=1000" -o image.jpg
-curl "https://api.skyju.cc/mobile-acg/api.php?method=get" -o image.jpg # 随机获取
-```
-
-若成功，返回`image/jpeg`数据；若失败，返回JSON数据。
-
-### 随机获取一张图片并跳转到地址
-
-| GET参数  | 值类型                     | 是否可选 | 说明                                               |
-| -------- | -------------------------- | -------- | -------------------------------------------------- |
-| method   | "redirect": String         | 否       | 本接口规定的method值                               |
-| no_proxy | 此参数无需值，只需键名存在 | 是       | 若存在此参数，表示跳转到Telegram原地址而非反代地址 |
+| GET参数 | 值类型        | 是否可选 | 说明                       |
+| ------- | ------------- | -------- | -------------------------- |
+| method  | "get": String | 否       | 本接口规定的method值       |
+| id      | Int           | 是       | 图片的ID；不指定为随机获取 |
 
 示例请求：
 
 ```bash
-curl -v "https://api.skyju.cc/mobile-acg/api.php?method=redirect"
+curl -v "https://api.skyju.cc/mobile-acg/api.php?method=get"
 ```
 
 示例返回：
@@ -85,14 +67,14 @@ curl -v "https://api.skyju.cc/mobile-acg/api.php?method=redirect"
 ```
 ...
 HTTP/1.1 302 Found
-Location: https://api.skyju.cc/mobile-acg/api.php?method=get&id=4137
+Location: https://p.pstatp.com/origin/1384d00016e9a0aa34dae
 ...
 ```
 
 示例请求：
 
 ```bash
-curl -v "https://api.skyju.cc/mobile-acg/api.php?method=redirect&no_proxy"
+curl -v "https://api.skyju.cc/mobile-acg/api.php?method=get&id=9876"
 ```
 
 示例返回：
@@ -100,7 +82,7 @@ curl -v "https://api.skyju.cc/mobile-acg/api.php?method=redirect&no_proxy"
 ```
 ...
 HTTP/1.1 302 Found
-Location: https://cdn4.telesco.pe/file/UXncB4Lo...5Qv4kyA.jpg
+Location: https://p.pstatp.com/origin/1384e00040d776e8f2486
 ...
 ```
 
@@ -118,7 +100,7 @@ cd /path/to/your/www/
 git clone https://github.com/juzeon/mobile-acg.git mobile-acg
 ```
 
-3.添加cron任务每日从Telegram更新数据库：
+3.添加cron任务每日从Telegram更新图片，上传并存储到数据库：
 
 ```bash
 0 1 * * * php /path/to/your/www/mobile-acg/update-cli.php # 每日凌晨一点更新

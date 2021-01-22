@@ -1,7 +1,7 @@
 <?php
 require_once (__DIR__.'/init.php');
 if(!isset($_GET['method'])){
-    exitWithApiJson('Param \'method\': json, get, redirect',false);
+    exitWithApiJson('Param \'method\': json, get',false);
 }
 $method=$_GET['method'];
 switch ($method){
@@ -16,9 +16,7 @@ switch ($method){
         foreach ($result as $item){
             $obj[]=[
                 'id'=>intval($item['tg_id']),
-                'raw_url'=>$item['url'],
-                'proxy_url'=>(isSSL()?'https://':'http://').$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']
-                    .'?method=get&id='.$item['tg_id']
+                'url'=>$item['url']
             ];
         }
         exitWithApiJson($obj);
@@ -26,28 +24,16 @@ switch ($method){
     case 'get':
         if(isset($_GET['id'])){
             $id=intval($_GET['id']);
-            $url=$db->cell('select url from images where tg_id=?',$id);
+            $url=$db->cell('select url from images where tg_id=? and url is not null',$id);
         }else{
-            $url=$db->cell('select url from images order by random() limit 1');
+            $url=$db->cell('select url from images where url is not null order by random() limit 1');
         }
         if(empty($url)){
             exitWithApiJson('No result matches this ID',false);
         }
-        $imgRaw=$guzzle->get($url)->getBody();
-        header('Content-Type: image/jpeg');
-        echo $imgRaw;
-        break;
-    case 'redirect':
-        if(isset($_GET['no_proxy'])){
-            $url=$db->cell('select url from images order by random() limit 1');
-            header('Location: '.$url);
-        }else {
-            $tgId = $db->cell('select tg_id from images order by random() limit 1');
-            header('Location: ' . (isSSL() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']
-                . '?method=get&id=' . $tgId);
-        }
+        header('Location: '.$url);
         break;
     default:
-        exitWithApiJson('Param \'method\': json, get, redirect',false);
+        exitWithApiJson('Param \'method\': json, get',false);
         break;
 }
