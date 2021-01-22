@@ -38,12 +38,12 @@ curl "https://api.skyju.cc/mobile-acg/api.php?method=json&count=2"
     "status": true,
     "data": [
         {
-            "id": 9824,
-            "url": "https://img11.360buyimg.com/ddimg/jfs/t1/157690/25/4215/76309/600a8e64Ec3ca56f7/f41912b4f6a6be9f.jpg"
+            "id": 8152,
+            "url": "https://p.pstatp.com/origin/1377b000109dcb474c743"
         },
         {
-            "id": 9028,
-            "url": "https://img14.360buyimg.com/ddimg/jfs/t1/157866/6/4622/87677/600a8f73E3c156e23/b20bdc78aed0212d.jpg"
+            "id": 7216,
+            "url": "https://p.pstatp.com/origin/1380800010f4d9fd7f254"
         }
     ]
 }
